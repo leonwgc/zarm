@@ -142,6 +142,14 @@ const devConfig: Configuration = webpackMerge({}, deployConfig, {
     minimize: false,
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
+  cache: {
+    type: 'filesystem',
+    name: 'zarm-dev',
+    buildDependencies: {
+      config: [__filename],
+    },
+    store: 'pack',
+  },
 });
 
 const umdConfig: Configuration = webpackMerge({}, config, {
@@ -200,7 +208,9 @@ const getWebpackConfig = (type?: WebpackConfigType): Configuration => {
 
     case 'dev':
       devConfig.output.publicPath = '/';
-      (devConfig.module.rules[0] as RuleSetRule).use[0].options.plugins.push(require.resolve('react-refresh/babel'));
+      (devConfig.module.rules[0] as RuleSetRule).use[0].options.plugins.push(
+        require.resolve('react-refresh/babel'),
+      );
       devConfig.plugins.push(new ReactRefreshPlugin());
       return devConfig;
 
